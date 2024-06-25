@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
-// Styles
 import "./QrStyles.css";
 
-// Qr Scanner
 import QrScanner from "qr-scanner";
 import QrFrame from "../assets/qr-frame.svg";
 
@@ -17,37 +15,32 @@ const QrReader = () => {
   // Result
   const [scannedResult, setScannedResult] = useState("");
 
-  // Success
+  // When the scan is a success
   const onScanSuccess = (result) => {
-    // 🖨 Print the "result" to browser console.
     console.log(result);
-    // ✅ Handle success.
-    // 😎 You can do whatever you want with the scanned result.
+    // Here we can do whatever we want with the results
     setScannedResult(result.data);
   };
 
-  // Fail
+  // When the Scan is a fail
   const onScanFail = (err) => {
-    // 🖨 Print the "err" to browser console.
     console.log(err);
   };
 
   useEffect(() => {
     if (videoEl.current && !scanner.current) {
-      // 👉 Instantiate the QR Scanner
       scanner.current = new QrScanner(videoEl.current, onScanSuccess, {
         onDecodeError: onScanFail,
-        // 📷 This is the camera facing mode. In mobile devices, "environment" means back camera and "user" means front camera.
+        //Camera mode: On a mobile device "environment" means back camera and "user" front. 
         preferredCamera: "environment",
-        // 🖼 This will help us position our "QrFrame.svg" so that user can only scan when qr code is put in between our QrFrame.svg.
+        // Helps position the frames ofthe QR code scanner
         highlightScanRegion: true,
-        // 🔥 This will produce a yellow (default color) outline around the qr code that we scan, showing a proof that our qr-scanner is scanning that qr code.
+        // When a QR code is being scanned, this command produces a yellow outline as proof. 
         highlightCodeOutline: true,
-        // 📦 A custom div which will pair with "highlightScanRegion" option above 👆. This gives us full control over our scan region.
         overlay: qrBoxEl.current || undefined,
       });
 
-      // 🚀 Start QR Scanner
+      // Deploys the QR scanner
       scanner.current
         .start()
         .then(() => setQrOn(true))
@@ -56,8 +49,7 @@ const QrReader = () => {
         });
     }
 
-    // 🧹 Clean up on unmount.
-    // 🚨 This removes the QR Scanner from rendering and using camera when it is closed or removed from the UI.
+    // Stops the QR scanner from rendering when the camera isn't deployed
     return () => {
       if (!videoEl.current) {
         scanner.current.stop();
@@ -79,7 +71,6 @@ const QrReader = () => {
         />
       </div>
 
-      {/* Show Data Result if scan is success */}
       {scannedResult && (
         <p
           style={{
